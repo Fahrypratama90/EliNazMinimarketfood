@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logging Out... - FastFood Outlet</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logout-box {
+            background-color: #121212;
+            border: 1px solid #222222;
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #222222;
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logout-box">
+        <div class="spinner"></div>
+        <h2>Mengakhiri Sesi</h2>
+        <p>Membersihkan data login Anda dari sistem...</p>
+    </div>
+
+    <script>
+        // Proses pembersihan data lokal
+        localStorage.removeItem('currentUser');
+
+        // Beri jeda efek loading 1.5 detik biar estetik, lalu lempar ke halaman login utama (index.html)
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+    </script>
+</body>
+</html>
+
