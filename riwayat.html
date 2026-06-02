@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Transaksi - Minimarket Fast Food</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        nav {
+            background-color: #121212;
+            border-bottom: 1px solid #222222;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: #888888;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .buyer-menu, .seller-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content */
+        .container {
+            flex: 1;
+            padding: 40px 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: #888888;
+            margin-top: 5px;
+        }
+
+        /* Transaction Cards */
+        .transaksi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .transaksi-card {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .transaksi-meta {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #888888;
+        }
+
+        .id-transaksi {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .item-info-detail {
+            color: #dddddd;
+        }
+
+        .item-qty {
+            color: #666666;
+            margin-left: 5px;
+        }
+
+        .item-subtotal {
+            font-weight: 600;
+        }
+
+        .transaksi-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            border-top: 1px dashed #222222;
+            padding-top: 12px;
+        }
+
+        .status-badge {
+            background-color: #152c15;
+            color: #88ff88;
+            border: 1px solid #33cc33;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .total-pembayaran {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 50px;
+            color: #666666;
+            font-size: 15px;
+            border: 1px dashed #222222;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">FastFood Outlet <span id="userGreeting"></span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            
+            <div id="buyerMenu" class="buyer-menu" style="display: none;">
+                <a href="cart.html">Keranjang</a>
+                <a href="riwayat.html" class="active">Riwayat Belanja</a>
+                <a href="account.html">Akun</a>
+            </div>
+
+            <div id="sellerMenu" class="seller-menu" style="display: none;">
+                <a href="add.html">Tambah Produk</a>
+                <a href="riwayat.html" class="active">Riwayat Toko</a>
+            </div>
+
+            <button class="btn-logout" id="btnLogout">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 id="pageTitle">Riwayat Aktivitas</h1>
+            <p id="pageDesc">Daftar laporan transaksi sistem.</p>
+        </div>
+
+        <div class="transaksi-list" id="transaksiContainer">
+            </div>
+    </div>
+
+    <script>
+        // Cek Login
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userGreeting').innerText = `(${currentUser.name})`;
+
+        const buyerMenu = document.getElementById('buyerMenu');
+        const sellerMenu = document.getElementById('sellerMenu');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageDesc = document.getElementById('pageDesc');
+        const transaksiContainer = document.getElementById('transaksiContainer');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Sesuaikan Tampilan Menu Navigasi Berdasarkan Role
+        if (currentUser.role === 'penjual') {
+            sellerMenu.style.display = 'flex';
+            pageTitle.innerText = "Laporan Penjualan Toko";
+            pageDesc.innerText = "Pantau pesanan masuk dari pembeli serta total pendapatan etalase Anda.";
+        } else {
+            buyerMenu.style.display = 'flex';
+            pageTitle.innerText = "Riwayat Belanja Anda";
+            pageDesc.innerText = "Daftar seluruh makanan dan minuman cepat saji yang pernah Anda beli.";
+        }
+
+        function loadRiwayat() {
+            const semuaTransaksi = JSON.parse(localStorage.getItem('transactions')) || [];
+            transaksiContainer.innerHTML = "";
+
+            if (semuaTransaksi.length === 0) {
+                transaksiContainer.innerHTML = `<div class="empty-message">Belum ada rekaman transaksi di sistem.</div>`;
+                return;
+            }
+
+            let adaData = false;
+
+            // Loop dari transaksi terbaru (terbalik)
+            for (let i = semuaTransaksi.length - 1; i >= 0; i--) {
+                const trx = semuaTransaksi[i];
+
+                if (currentUser.role === 'pembeli') {
+                    // JIKA PEMBELI: Hanya tampilkan transaksinya sendiri
+                    if (trx.buyerUsername === currentUser.username) {
+                        adaData = true;
+                        renderCardPembeli(trx);
+                    }
+                } else if (currentUser.role === 'penjual') {
+                    // JIKA PENJUAL: Saring item keranjang di dalam transaksi yang belongs to penjual ini
+                    const itemMilikTokoIni = trx.items.filter(item => item.sellerUsername === currentUser.username);
+                    
+                    if (itemMilikTokoIni.length > 0) {
+                        adaData = true;
+                        renderCardPenjual(trx, itemMilikTokoIni);
+                    }
+                }
+            }
+
+            if (!adaData) {
+                transaksiContainer.innerHTML = `<div class="empty-message">Belum ada riwayat transaksi yang tercatat untuk akun Anda.</div>`;
+            }
+        }
+
+        // Render Riwayat Versi Pembeli (Melihat total belanja global)
+        function renderCardPembeli(trx) {
+            const card = document.createElement('div');
+            card.className = 'transaksi-card';
+
+            let itemRowsHtml = "";
+            trx.items.forEach(item => {
+                const priceFormatted = "Rp " + parseInt(item.price).toLocaleString('id-ID');
+                itemRowsHtml += `
+                    <div class="item-row">
+                        <span class="item-info-detail">${item.name} <span class="item-qty">x${item.quantity}</span></span>
+                        <span class="item-subtotal">${priceFormatted}</span>
+                    </div>
+                `;
+            });
+
+            const totalFormatted = "Rp " + parseInt(trx.totalHarga).toLocaleString('id-ID');
+
+            card.innerHTML = `
+                <div class="transaksi-meta">
+                    <div>ID: <span class="id-transaksi">${trx.transactionId}</span></div>
+                    <div>${trx.orderDate}</div>
+                </div>
+                <div class="transaksi-body">
+                    ${itemRowsHtml}
+                </div>
+                <div class="transaksi-footer">
+                    <span class="status-badge">${trx.status}</span>
+                    <div class="total-pembayaran">Total: ${totalFormatted}</div>
+                </div>
+            `;
+            transaksiContainer.appendChild(card);
+        }
+
+        // Render Riwayat Versi Penjual (Melihat pendapatan dari item tokonya saja)
+        function renderCardPenjual(trx, itemsTerfilter) {
+            const card = document.createElement('div');
+            card.className = 'transaksi-card';
+
+            let itemRowsHtml = "";
+            let pendapatanToko = 0;
+
+            itemsTerfilter.forEach(item => {
+                const subTotal = item.price * item.quantity;
+                pendapatanToko += subTotal;
+                const priceFormatted = "Rp " + parseInt(item.price).toLocaleString('id-ID');
+                
+                itemRowsHtml += `
+                    <div class="item-row">
+                        <span class="item-info-detail">${item.name} <span class="item-qty">x${item.quantity}</span></span>
+                        <span class="item-subtotal">${priceFormatted}</span>
+                    </div>
+                `;
+            });
+
+            const totalPendapatanFormatted = "Rp " + pendapatanToko.toLocaleString('id-ID');
+
+            card.innerHTML = `
+                <div class="transaksi-meta">
+                    <div>ID Transaksi: <span class="id-transaksi">${trx.transactionId}</span></div>
+                    <div>Pembeli: <b>${trx.buyerName}</b> (${trx.orderDate})</div>
+                </div>
+                <div class="transaksi-body">
+                    ${itemRowsHtml}
+                </div>
+                <div class="transaksi-footer">
+                    <span class="status-badge" style="background-color:#1a1a1a; color:#aaa; border-color:#333;">Dapur Siap</span>
+                    <div class="total-pembayaran" style="color:#88ff88;">Pendapatan: ${totalPendapatanFormatted}</div>
+                </div>
+            `;
+            transaksiContainer.appendChild(card);
+        }
+
+        // Logika Logout
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        loadRiwayat();
+    </script>
+</body>
+</html>

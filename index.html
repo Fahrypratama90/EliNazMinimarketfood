@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Minimarket Fast Food</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            color: #888888;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #aaaaaa;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffffff;
+            background-color: #222222;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #cccccc;
+        }
+
+        .info-note {
+            font-size: 11px;
+            color: #666666;
+            text-align: center;
+            margin-top: 24px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="brand-title">FASTFOOD OUTLET</div>
+        <div class="brand-subtitle">Portal Masuk Sistem Instan</div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username / Email Bebas</label>
+                <input type="text" id="username" placeholder="Masukkan nama bebas" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Masuk Sebagai (Abaikan jika Admin)</label>
+                <select id="role">
+                    <option value="pembeli">Pembeli (Customer)</option>
+                    <option value="penjual">Penjual (Merchant)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-login">Masuk Aplikasi</button>
+        </form>
+
+        <div class="info-note">
+            Sistem otomatis menyimpan akun baru ke penyimpanan lokal browser.<br>
+            Akun admin bersifat rahasia (hidden).
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const selectedRole = document.getElementById('role').value;
+
+            // 1. CEK LOGIN HIDDEN UNTUK ADMIN
+            if (usernameInput === 'admin' && passwordInput === 'admin123') {
+                // Simpan session admin ke localStorage
+                const adminSession = {
+                    username: 'admin',
+                    name: 'Super Admin',
+                    role: 'admin'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(adminSession));
+                
+                // Masukkan ke riwayat user di database lokal agar bisa dimonitor admin sendiri nanti
+                simpanUserKeLokal('admin', 'admin', 'admin');
+                
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            // 2. SISTEM LOGIN/REGISTER BEBAS (Lokal)
+            // Simpan session user yang sedang aktif sekarang
+            const userSession = {
+                username: usernameInput.toLowerCase(),
+                name: usernameInput,
+                role: selectedRole
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userSession));
+
+            // Simpan data user ke daftar user terdaftar (untuk monitoring Admin)
+            simpanUserKeLokal(usernameInput.toLowerCase(), usernameInput, selectedRole);
+
+            // Alihkan halaman secara runtut ke dashboard.html
+            window.location.href = 'dashboard.html';
+        });
+
+        // Fungsi pembantu untuk mencatat siapa saja yang login/daftar ke aplikasi
+        function simpanUserKeLokal(username, name, role) {
+            let daftarUser = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            
+            // Cek apakah user sudah pernah tercatat sebelumnya
+            const sudahAda = daftarUser.some(u => u.username === username);
+            
+            if (!sudahAda) {
+                daftarUser.push({
+                    username: username,
+                    name: name,
+                    role: role,
+                    waktuDaftar: new Date().toLocaleString('id-ID')
+                });
+                localStorage.setItem('registeredUsers', JSON.stringify(daftarUser));
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penjual - Tambah Produk</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        nav {
+            background-color: #121212;
+            border-bottom: 1px solid #222222;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: #888888;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content Form */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .form-container {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 35px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            border-left: 3px solid #ffffff;
+            padding-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #aaaaaa;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffffff;
+            background-color: #222222;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 90px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #cccccc;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #152c15;
+            border: 1px solid #33cc33;
+            color: #88ff88;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">Merchant Panel <span id="userGreeting"></span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="add.html" class="active">Tambah Produk</a>
+            <a href="riwayat.html">Riwayat Toko</a>
+            <button class="btn-logout" id="btnLogout">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="form-title">Tambah Produk Baru</div>
+            
+            <div class="message" id="statusMessage"></div>
+
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="pName">Nama Makanan / Minuman</label>
+                    <input type="text" id="pName" placeholder="Contoh: Burger Keju Super Lumer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pCategory">Kategori</label>
+                    <select id="pCategory" required>
+                        <option value="Makanan Cepat Saji">Makanan Cepat Saji</option>
+                        <option value="Minuman Cepat Saji">Minuman Cepat Saji</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pPrice">Harga (Rupiah)</label>
+                    <input type="number" id="pPrice" placeholder="Contoh: 25000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pLink">Link Foto Produk (URL Image)</label>
+                    <input type="url" id="pLink" placeholder="https://images.unsplash.com/... atau link bebas" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pDesc">Deskripsi Produk</label>
+                    <textarea id="pDesc" placeholder="Jelaskan detail produk makanan/minuman ini..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnSubmit">Simpan & Tayangkan</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Proteksi Akun
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.role !== 'penjual') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userGreeting').innerText = `(${currentUser.name})`;
+
+        const addProductForm = document.getElementById('addProductForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Logika Menyimpan Produk ke LocalStorage
+        addProductForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('pName').value.trim();
+            const category = document.getElementById('pCategory').value;
+            const price = parseInt(document.getElementById('pPrice').value);
+            const imageLink = document.getElementById('pLink').value.trim();
+            const desc = document.getElementById('pDesc').value.trim();
+
+            // Ambil daftar produk yang sudah ada di lokal memory
+            let daftarProduk = JSON.parse(localStorage.getItem('products')) || [];
+
+            // Membuat objek data produk baru
+            const produkBaru = {
+                id: 'PROD_' + Date.now(), // Unique ID berdasarkan timestamp waktu
+                name: name,
+                category: category,
+                price: price,
+                imageLink: imageLink,
+                desc: desc,
+                sellerUsername: currentUser.username,
+                sellerName: currentUser.name,
+                createdAt: new Date().toISOString()
+            };
+
+            // Masukkan produk baru ke dalam array list
+            daftarProduk.push(produkBaru);
+            
+            // Simpan kembali array yang diperbarui ke LocalStorage
+            localStorage.setItem('products', JSON.stringify(daftarProduk));
+
+            // Tampilkan pesan sukses
+            statusMessage.className = "message success";
+            statusMessage.innerText = "Produk makanan/minuman berhasil ditambahkan!";
+            statusMessage.style.display = "block";
+
+            // Reset isi input form
+            addProductForm.reset();
+
+            // Sembunyikan notifikasi setelah 3 detik dan lempar balik ke dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+
+        // Logika Logout
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - Minimarket Fast Food</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        nav {
+            background-color: #121212;
+            border-bottom: 1px solid #222222;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: #888888;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content Grid */
+        .container {
+            flex: 1;
+            padding: 40px 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            border-left: 3px solid #ffffff;
+            padding-left: 10px;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cart Items List */
+        .cart-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cart-item {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #1a1a1a;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .item-seller {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .item-price {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .item-qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-qty {
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .btn-qty:hover {
+            border-color: #ffffff;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #ff5555;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
+        .btn-remove:hover {
+            text-decoration: underline;
+        }
+
+        /* Summary Checkout Box */
+        .summary-box {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 6px;
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 10px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #aaaaaa;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 20px;
+            border-top: 1px solid #222222;
+            padding-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-checkout:hover {
+            background-color: #cccccc;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 50px;
+            background-color: #121212;
+            border: 1px dashed #222222;
+            border-radius: 6px;
+            grid-column: 1 / -1;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">FastFood Outlet <span id="userGreeting"></span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="cart.html" class="active">Keranjang</a>
+            <a href="riwayat.html">Riwayat Belanja</a>
+            <a href="account.html">Akun</a>
+            <button class="btn-logout" id="btnLogout">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-title">Keranjang Belanja Anda</div>
+
+        <div class="cart-layout" id="cartLayout">
+            <div class="cart-items-list" id="cartItemsContainer">
+                </div>
+
+            <div class="summary-box" id="summaryContainer">
+                <div class="summary-title">Ringkasan Pesanan</div>
+                <div class="summary-row">
+                    <span>Total Barang</span>
+                    <span id="totalItemsText">0 Item</span>
+                </div>
+                <div class="summary-row">
+                    <span>Biaya Pengiriman</span>
+                    <span>Gratis</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total Harga</span>
+                    <span id="totalPriceText">Rp 0</span>
+                </div>
+                <button class="btn-checkout" id="btnCheckout">Beli Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Proteksi Akun
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.role !== 'pembeli') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userGreeting').innerText = `(${currentUser.name})`;
+
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        const totalItemsText = document.getElementById('totalItemsText');
+        const totalPriceText = document.getElementById('totalPriceText');
+        const btnCheckout = document.getElementById('btnCheckout');
+        const btnLogout = document.getElementById('btnLogout');
+
+        let totalHargaSistem = 0;
+        let keranjangUser = [];
+
+        function renderKeranjang() {
+            const seluruhKeranjang = JSON.parse(localStorage.getItem('carts')) || [];
+            // Filter hanya mengambil isi keranjang milik user pembeli yang sedang aktif saat ini
+            keranjangUser = seluruhKeranjang.filter(item => item.buyerUsername === currentUser.username);
+            
+            cartItemsContainer.innerHTML = "";
+            totalHargaSistem = 0;
+            let totalQty = 0;
+
+            if (keranjangUser.length === 0) {
+                document.getElementById('cartLayout').innerHTML = `
+                    <div class="empty-cart-message">
+                        <h3>Keranjang belanja Anda masih kosong.</h3>
+                        <p style="margin-top:10px;"><a href="dashboard.html" style="color:#fff;">Klik di sini untuk melihat menu makanan cepat saji.</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            keranjangUser.forEach((item) => {
+                const subTotalItem = item.price * item.quantity;
+                totalHargaSistem += subTotalItem;
+                totalQty += item.quantity;
+
+                const formattedPrice = "Rp " + parseInt(item.price).toLocaleString('id-ID');
+
+                const cartDiv = document.createElement('div');
+                cartDiv.className = 'cart-item';
+                cartDiv.innerHTML = `
+                    <img src="${item.imageLink}" class="item-img" alt="${item.name}" onerror="this.src='https://placehold.co/100x100/1a1a1a/ffffff?text=FastFood'">
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-seller">Toko: ${item.sellerName}</div>
+                        <div class="item-price">${formattedPrice}</div>
+                    </div>
+                    <div class="item-qty-control">
+                        <button class="btn-qty" onclick="ubahJumlah('${item.cartId}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn-qty" onclick="ubahJumlah('${item.cartId}', 1)">+</button>
+                        <button class="btn-remove" onclick="hapusItemDariCart('${item.cartId}')">Hapus</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartDiv);
+            });
+
+            totalItemsText.innerText = totalQty + " Item";
+            totalPriceText.innerText = "Rp " + totalHargaSistem.toLocaleString('id-ID');
+        }
+
+        // Fungsi menambah atau mengurangi kuantitas pesanan
+        window.ubahJumlah = function(cartId, perubahan) {
+            let seluruhKeranjang = JSON.parse(localStorage.getItem('carts')) || [];
+            const index = seluruhKeranjang.findIndex(item => item.cartId === cartId);
+
+            if (index > -1) {
+                seluruhKeranjang[index].quantity += perubahan;
+                // Jika kuantitas di bawah 1, otomatis hapus item
+                if (seluruhKeranjang[index].quantity < 1) {
+                    seluruhKeranjang.splice(index, 1);
+                }
+                localStorage.setItem('carts', JSON.stringify(seluruhKeranjang));
+                renderKeranjang();
+            }
+        }
+
+        // Fungsi menghapus item secara manual dari keranjang
+        window.hapusItemDariCart = function(cartId) {
+            let seluruhKeranjang = JSON.parse(localStorage.getItem('carts')) || [];
+            seluruhKeranjang = seluruhKeranjang.filter(item => item.cartId !== cartId);
+            localStorage.setItem('carts', JSON.stringify(seluruhKeranjang));
+            renderKeranjang();
+        }
+
+        // Logika Tombol Checkout (Pembelian)
+        btnCheckout.addEventListener('click', () => {
+            if (keranjangUser.length === 0) return;
+
+            if (confirm("Apakah Anda yakin ingin memproses pembelian makanan/minuman ini?")) {
+                let daftarTransaksi = JSON.parse(localStorage.getItem('transactions')) || [];
+
+                // Masukkan pesanan keranjang saat ini ke riwayat transaksi pusat
+                const transaksiBaru = {
+                    transactionId: 'TRX_' + Date.now(),
+                    orderDate: new Date().toLocaleString('id-ID'),
+                    buyerUsername: currentUser.username,
+                    buyerName: currentUser.name,
+                    items: keranjangUser, // menyimpan salinan item yang dibeli
+                    totalHarga: totalHargaSistem,
+                    status: 'Selesai'
+                };
+
+                daftarTransaksi.push(transaksiBaru);
+                localStorage.setItem('transactions', JSON.stringify(daftarTransaksi));
+
+                // Bersihkan keranjang milik user pembeli ini saja dari database lokal
+                let seluruhKeranjang = JSON.parse(localStorage.getItem('carts')) || [];
+                seluruhKeranjang = seluruhKeranjang.filter(item => item.buyerUsername !== currentUser.username);
+                localStorage.setItem('carts', JSON.stringify(seluruhKeranjang));
+
+                alert("Pembelian Berhasil! Pesanan Anda sedang diproses oleh pihak dapur penjual.");
+                window.location.href = 'riwayat.html'; // Pindahkan ke halaman riwayat
+            }
+        });
+
+        // Logika Logout
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        renderKeranjang();
+    </script>
+</body>
+</html>

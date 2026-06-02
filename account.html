@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Saya - Minimarket Fast Food</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        nav {
+            background-color: #121212;
+            border-bottom: 1px solid #222222;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: #888888;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content Profile */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .profile-container {
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 35px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 32px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            text-transform: uppercase;
+        }
+
+        .profile-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-subtitle {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #aaaaaa;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffffff;
+            background-color: #222222;
+        }
+
+        .form-group input[disabled] {
+            color: #666666;
+            background-color: #0b0b0b;
+            border-color: #222222;
+            cursor: not-allowed;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #cccccc;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            background-color: #152c15;
+            border: 1px solid #33cc33;
+            color: #88ff88;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">FastFood Outlet <span id="userGreeting"></span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="cart.html">Keranjang</a>
+            <a href="riwayat.html">Riwayat Belanja</a>
+            <a href="account.html" class="active">Akun</a>
+            <button class="btn-logout" id="btnLogout">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="avatar-placeholder" id="avatarLetter">U</div>
+                <div class="profile-title">Pengaturan Profil</div>
+                <div class="profile-subtitle">Perbarui informasi data diri Anda</div>
+            </div>
+
+            <div class="message" id="statusMessage">Profil berhasil diperbarui!</div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Username (Permanen)</label>
+                    <input type="text" id="uUsername" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>Role Sistem</label>
+                    <input type="text" id="uRole" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="uName">Nama Lengkap Tampilan</label>
+                    <input type="text" id="uName" placeholder="Masukkan nama lengkap baru" required>
+                </div>
+
+                <button type="submit" class="btn-save">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Proteksi Akun
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.role !== 'pembeli') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userGreeting').innerText = `(${currentUser.name})`;
+
+        const uUsername = document.getElementById('uUsername');
+        const uRole = document.getElementById('uRole');
+        const uName = document.getElementById('uName');
+        const avatarLetter = document.getElementById('avatarLetter');
+        const profileForm = document.getElementById('profileForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Isi data form saat halaman dimuat
+        uUsername.value = currentUser.username;
+        uRole.value = currentUser.role.toUpperCase();
+        uName.value = currentUser.name;
+        avatarLetter.innerText = currentUser.name.charAt(0);
+
+        // Proses Update Data Profil
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const namaBaru = uName.value.trim();
+
+            // 1. Update session user aktif saat ini
+            currentUser.name = namaBaru;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            // 2. Update data di daftar registrasi user (untuk monitoring admin)
+            let daftarUser = JSON.parse(localStorage.getItem('registeredUsers')) || [];
+            const userIdx = daftarUser.findIndex(u => u.username === currentUser.username);
+            if (userIdx > -1) {
+                daftarUser[userIdx].name = namaBaru;
+                localStorage.setItem('registeredUsers', JSON.stringify(daftarUser));
+            }
+
+            // Tampilkan visual feedback sukses
+            document.getElementById('userGreeting').innerText = `(${namaBaru})`;
+            avatarLetter.innerText = namaBaru.charAt(0);
+            statusMessage.style.display = "block";
+
+            setTimeout(() => {
+                statusMessage.style.display = "none";
+            }, 2500);
+        });
+
+        // Logika Logout
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Produk - Minimarket Fast Food</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Style */
+        nav {
+            background-color: #121212;
+            border-bottom: 1px solid #222222;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-logo span {
+            color: #888888;
+            font-size: 12px;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Layout Detail */
+        .container {
+            flex: 1;
+            padding: 40px 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .btn-back {
+            display: inline-block;
+            color: #aaaaaa;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 30px;
+            transition: color 0.3s;
+        }
+
+        .btn-back:hover {
+            color: #ffffff;
+        }
+
+        .product-detail-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-img-container {
+            background-color: #1a1a1a;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 350px;
+        }
+
+        .detail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-badge {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+
+        .detail-name {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .detail-seller {
+            font-size: 13px;
+            color: #888888;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222222;
+            padding-bottom: 15px;
+        }
+
+        .detail-desc-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .detail-desc {
+            font-size: 15px;
+            color: #dddddd;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .detail-price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-add-cart:hover {
+            background-color: #cccccc;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 50px;
+            background-color: #121212;
+            border: 1px solid #222222;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">FastFood Outlet <span id="userGreeting"></span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="cart.html">Keranjang</a>
+            <a href="riwayat.html">Riwayat Belanja</a>
+            <a href="account.html">Akun</a>
+            <button class="btn-logout" id="btnLogout">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="dashboard.html" class="btn-back">← Kembali ke Dashboard</a>
+
+        <div id="detailContainer">
+            </div>
+    </div>
+
+    <script>
+        // Proteksi Halaman
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.role !== 'pembeli') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('userGreeting').innerText = `(${currentUser.name})`;
+
+        // Ambal parameter ID produk dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        const detailContainer = document.getElementById('detailContainer');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Cari data produk berdasarkan ID di LocalStorage
+        const daftarProduk = JSON.parse(localStorage.getItem('products')) || [];
+        const produkTerpilih = daftarProduk.find(p => p.id === productId);
+
+        if (!produkTerpilih) {
+            detailContainer.innerHTML = `
+                <div class="error-container">
+                    <h2>Produk Tidak Ditemukan</h2>
+                    <p style="color: #888; margin-top: 10px;">Makanan atau minuman cepat saji mungkin sudah dihapus oleh penjual.</p>
+                </div>
+            `;
+        } else {
+            // Format Rupiah
+            const formattedPrice = "Rp " + parseInt(produkTerpilih.price).toLocaleString('id-ID');
+
+            detailContainer.innerHTML = `
+                <div class="product-detail-wrapper">
+                    <div class="detail-img-container">
+                        <img src="${produkTerpilih.imageLink}" class="detail-img" alt="${produkTerpilih.name}" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=No+Image'">
+                    </div>
+                    <div class="detail-info">
+                        <span class="detail-badge">${produkTerpilih.category}</span>
+                        <h1 class="detail-name">${produkTerpilih.name}</h1>
+                        <div class="detail-seller">Disediakan oleh: <b>${produkTerpilih.sellerName}</b></div>
+                        
+                        <div class="detail-desc-title">Deskripsi Produk</div>
+                        <p class="detail-desc">${produkTerpilih.desc}</p>
+                        
+                        <div class="detail-price">${formattedPrice}</div>
+                        <button class="btn-add-cart" id="btnAddCart">Tambah Ke Keranjang</button>
+                    </div>
+                </div>
+            `;
+
+            // Logika Tambah ke Keranjang Belanja
+            document.getElementById('btnAddCart').addEventListener('click', () => {
+                let keranjang = JSON.parse(localStorage.getItem('carts')) || [];
+
+                // Cek apakah item ini sudah ada di keranjang pembeli ini sebelumnya
+                const itemIndex = keranjang.findIndex(item => item.productId === productId && item.buyerUsername === currentUser.username);
+
+                if (itemIndex > -1) {
+                    // Jika sudah ada, tambahkan jumlah kuantitasnya saja
+                    keranjang[itemIndex].quantity += 1;
+                } else {
+                    // Jika belum ada, masukkan sebagai item baru
+                    keranjang.push({
+                        cartId: 'CART_' + Date.now(),
+                        productId: produkTerpilih.id,
+                        name: produkTerpilih.name,
+                        price: produkTerpilih.price,
+                        category: produkTerpilih.category,
+                        imageLink: produkTerpilih.imageLink,
+                        sellerId: produkTerpilih.sellerId,
+                        sellerUsername: produkTerpilih.sellerUsername,
+                        sellerName: produkTerpilih.sellerName,
+                        buyerUsername: currentUser.username,
+                        buyerName: currentUser.name,
+                        quantity: 1
+                    });
+                }
+
+                localStorage.setItem('carts', JSON.stringify(keranjang));
+                alert("Berhasil memasukkan " + produkTerpilih.name + " ke dalam keranjang!");
+                window.location.href = 'cart.html'; // Alihkan langsung ke halaman keranjang
+            });
+        }
+
+        // Logika Logout
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
